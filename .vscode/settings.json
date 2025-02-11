@@ -1,0 +1,21 @@
+{
+	"editor.formatOnSave": true,
+	"prettier.requireConfig": true,
+	"prettier.prettierPath": "./node_modules/prettier",
+	"prettier.useTabs": true,
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.codeActionsOnSave": {
+		"source.fixAll": "explicit",
+		"source.fixAll.eslint": "explicit"
+	},
+	"eslint.validate": [
+		"javascript",
+		"javascriptreact",
+		"typescript",
+		"typescriptreact"
+	],
+	"eslint.run": "onSave",
+	"typescript.tsdk": "node_modules/typescript/lib",
+	"css.customData": [".vscode/tailwind.json"],
+	"editor.rulers": [80]
+}
