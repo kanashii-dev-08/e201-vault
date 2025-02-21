@@ -17,6 +17,8 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { createAccount } from "@/lib/actions/user.action";
+import OTPModal from "@/components/OTPModal";
 
 type FormType = "sign-in" | "sign-up";
 
@@ -34,6 +36,7 @@ const authFormSchema = (formType: FormType) => {
 const AuthForm = ({ type }: { type: FormType }) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [errorMessage, setErrorMessage] = useState("");
+	const [accountId, setAccountId] = useState(null);
 	const formSchema = authFormSchema(type);
 
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -46,11 +49,17 @@ const AuthForm = ({ type }: { type: FormType }) => {
 	});
 
 	const onSubmit = async (values: z.infer<typeof formSchema>) => {
+		setIsLoading(true);
+		setErrorMessage("");
 		try {
-			console.log("Form Submitted:", values);
-			// You can send data to an API or handle authentication here
-		} catch (error) {
-			console.error("Form submission error:", error);
+			const user = await createAccount({
+				fullName: values.fullName || "",
+				email: values.email,
+			});
+
+			setAccountId(user.accountId);
+		} catch {
+			setErrorMessage("Failed to create account. Please try again.");
 		} finally {
 			setIsLoading(false);
 		}
@@ -99,7 +108,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
 						{type === "sign-up" ? "Sign Up" : "Sign In"}
 						{isLoading && (
 							<Image
-								src="/assets/icons/loading.svg"
+								src="/assets/icons/loader.svg"
 								alt="loading"
 								width={24}
 								height={24}
@@ -124,6 +133,10 @@ const AuthForm = ({ type }: { type: FormType }) => {
 					</div>
 				</form>
 			</Form>
+
+			{accountId && (
+				<OTPModal email={form.getValues("email")} accountId={accountId} />
+			)}
 		</>
 	);
 };
