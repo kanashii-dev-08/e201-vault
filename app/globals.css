@@ -362,7 +362,7 @@
 		@apply flex flex-1 flex-col gap-4 !important;
 	}
 	.mobile-nav-item {
-		@apply flex text-light-100 gap-4 w-full justify-start items-center h5 px-6 h-[52px] rounded-full !important;
+		@apply flex text-gray-700 gap-4 w-full justify-start items-center h5 px-6 h-[52px] rounded-full !important;
 	}
 	.mobile-sign-out-button {
 		@apply h5 flex h-[52px] w-full items-center gap-4 rounded-full bg-brand/10 px-6 text-brand shadow-none transition-all hover:bg-brand/20 !important;
