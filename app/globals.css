@@ -61,7 +61,7 @@
 
 @layer utilities {
 	.center {
-		@apply flex h-screen items-center justify-center bg-gray-200;
+		@apply flex h-screen items-center justify-center bg-light-400;
 	}
 	/* ===== TYPOGRAPHY */
 	.h1 {

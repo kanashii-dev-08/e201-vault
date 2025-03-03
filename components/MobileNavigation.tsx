@@ -16,6 +16,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import FileUploader from "@/components/FileUploader";
+import { signOutUser } from "@/lib/actions/user.action";
 
 interface Props {
 	ownerId: string;
@@ -65,8 +66,10 @@ const MobileNavigation = ({
 								className="header-user-avatar"
 							/>
 							<div className="sm:hidden lg:block">
-								<p className="subtitle-2 capitalize">{fullName}</p>
-								<p className="caption">{email}</p>
+								<p className="subtitle-2 capitalize text-gray-400">
+									{fullName}
+								</p>
+								<p className="caption text-gray-400">{email}</p>
 							</div>
 						</div>
 						<Separator className="mb-4 bg-light-200/20" />
@@ -103,7 +106,7 @@ const MobileNavigation = ({
 						<Button
 							type="submit"
 							className="mobile-sign-out-button"
-							onClick={() => {}}
+							onClick={async () => await signOutUser()}
 						>
 							<Image
 								src="/assets/icons/logout.svg"
