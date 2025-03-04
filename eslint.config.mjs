@@ -23,6 +23,7 @@ const eslintConfig = [
 			semi: ["error", "always"],
 			"prefer-arrow-callback": ["error"],
 			"prefer-template": ["error"],
+			"no-undef": "off",
 		},
 		settings: {
 			react: {
