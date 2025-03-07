@@ -76,30 +76,12 @@ const OTPModal = ({
 
 				<InputOTP maxLength={6} value={password} onChange={setPassword}>
 					<InputOTPGroup className="shad-otp">
-						<InputOTPSlot
-							index={0}
-							className="shadow-drop-1 flex size-12 justify-center gap-5 rounded-xl border-2 border-light-300 text-[40px] font-medium text-brand-100 ring-brand md:size-16"
-						/>
-						<InputOTPSlot
-							index={1}
-							className="shadow-drop-1 flex size-12 justify-center gap-5 rounded-xl border-2 border-light-300 text-[40px] font-medium text-brand-100 ring-brand md:size-16"
-						/>
-						<InputOTPSlot
-							index={2}
-							className="shadow-drop-1 flex size-12 justify-center gap-5 rounded-xl border-2 border-light-300 text-[40px] font-medium text-brand-100 ring-brand md:size-16"
-						/>
-						<InputOTPSlot
-							index={3}
-							className="shadow-drop-1 flex size-12 justify-center gap-5 rounded-xl border-2 border-light-300 text-[40px] font-medium text-brand-100 ring-brand md:size-16"
-						/>
-						<InputOTPSlot
-							index={4}
-							className="shadow-drop-1 flex size-12 justify-center gap-5 rounded-xl border-2 border-light-300 text-[40px] font-medium text-brand-100 ring-brand md:size-16"
-						/>
-						<InputOTPSlot
-							index={5}
-							className="shadow-drop-1 flex size-12 justify-center gap-5 rounded-xl border-2 border-light-300 text-[40px] font-medium text-brand-100 ring-brand md:size-16"
-						/>
+						<InputOTPSlot index={0} className="shad-otp-slot" />
+						<InputOTPSlot index={1} className="shad-otp-slot" />
+						<InputOTPSlot index={2} className="shad-otp-slot" />
+						<InputOTPSlot index={3} className="shad-otp-slot" />
+						<InputOTPSlot index={4} className="shad-otp-slot" />
+						<InputOTPSlot index={5} className="shad-otp-slot" />
 					</InputOTPGroup>
 				</InputOTP>
 
