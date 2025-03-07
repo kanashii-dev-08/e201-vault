@@ -1,12 +1,13 @@
 "use server";
 
-import { createAdminClient } from "../appwrite";
+import { createAdminClient, createSessionClient } from "../appwrite";
 import { InputFile } from "node-appwrite/file";
 import { appwriteConfig } from "../appwrite/config";
 import { ID, Models, Query } from "node-appwrite";
 import { constructFileUrl, getFileType, parseStringify } from "../utils";
 import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "./user.actions";
+
 const handleError = (error: unknown, message: string) => {
 	console.log(error, message);
 	throw error;
@@ -43,7 +44,7 @@ export const uploadFile = async ({
 		const newFile = await databases
 			.createDocument(
 				appwriteConfig.databaseId,
-				appwriteConfig.filesCollectionid,
+				appwriteConfig.filesCollectionId,
 				ID.unique(),
 				fileDocument
 			)
@@ -85,8 +86,6 @@ const createQueries = (
 		);
 	}
 
-	console.log(queries);
-
 	return queries;
 };
 
@@ -105,15 +104,12 @@ export const getFiles = async ({
 
 		const queries = createQueries(currentUser, types, searchText, sort, limit);
 
-		console.log({ currentUser, queries });
-
 		const files = await databases.listDocuments(
 			appwriteConfig.databaseId,
-			appwriteConfig.filesCollectionid,
+			appwriteConfig.filesCollectionId,
 			queries
 		);
 
-		console.log({ files });
 		return parseStringify(files);
 	} catch (error) {
 		handleError(error, "Failed to get files");
@@ -131,7 +127,7 @@ export const renameFile = async ({
 		const newName = `${name}.${extension}`;
 		const updatedFile = await databases.updateDocument(
 			appwriteConfig.databaseId,
-			appwriteConfig.filesCollectionid,
+			appwriteConfig.filesCollectionId,
 			fileId,
 			{
 				name: newName,
@@ -154,7 +150,7 @@ export const updateFileUsers = async ({
 	try {
 		const updatedFile = await databases.updateDocument(
 			appwriteConfig.databaseId,
-			appwriteConfig.filesCollectionid,
+			appwriteConfig.filesCollectionId,
 			fileId,
 			{
 				users: emails,
@@ -177,7 +173,7 @@ export const deleteFile = async ({
 	try {
 		const deletedFile = await databases.deleteDocument(
 			appwriteConfig.databaseId,
-			appwriteConfig.filesCollectionid,
+			appwriteConfig.filesCollectionId,
 			fileId
 		);
 
@@ -190,3 +186,44 @@ export const deleteFile = async ({
 		handleError(error, "Failed to rename file");
 	}
 };
+
+export async function getTotalSpaceUsed() {
+	try {
+		const { databases } = await createSessionClient();
+		const currentUser = await getCurrentUser();
+		if (!currentUser) throw new Error("User is not authenticated.");
+
+		const files = await databases.listDocuments(
+			appwriteConfig.databaseId,
+			appwriteConfig.filesCollectionId,
+			[Query.equal("owner", [currentUser.$id])]
+		);
+
+		const totalSpace = {
+			image: { size: 0, latestDate: "" },
+			document: { size: 0, latestDate: "" },
+			video: { size: 0, latestDate: "" },
+			audio: { size: 0, latestDate: "" },
+			other: { size: 0, latestDate: "" },
+			used: 0,
+			all: 2 * 1024 * 1024 * 1024 /* 2GB available bucket storage */,
+		};
+
+		files.documents.forEach((file) => {
+			const fileType = file.type as FileType;
+			totalSpace[fileType].size += file.size;
+			totalSpace.used += file.size;
+
+			if (
+				!totalSpace[fileType].latestDate ||
+				new Date(file.$updatedAt) > new Date(totalSpace[fileType].latestDate)
+			) {
+				totalSpace[fileType].latestDate = file.$updatedAt;
+			}
+		});
+
+		return parseStringify(totalSpace);
+	} catch (error) {
+		handleError(error, "Error calculating total space used:, ");
+	}
+}

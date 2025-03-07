@@ -416,7 +416,7 @@
 		@apply shad-no-focus h-11 w-full rounded-[8px] border-transparent bg-white !shadow-sm sm:w-[210px] !important;
 	}
 	.sort-select-content {
-		@apply !shadow-drop-3 !important;
+		@apply bg-white !important;
 	}
 
 	/* Thumbnail */
